@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok OAuth Callback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #00f2ea;
+        }
+        .code-box {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .success {
+            color: #00c853;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .instructions {
+            color: #666;
+            line-height: 1.6;
+        }
+        button {
+            background: #00f2ea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #00d4cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 TikTok OAuth Callback</h1>
+        
+        <div id="success" class="success" style="display:none;">
+            ✅ Authorization thành công!
+        </div>
+        
+        <div id="error" style="display:none; color: red;">
+            ❌ Không tìm thấy authorization code!
+        </div>
+        
+        <div id="code-container" style="display:none;">
+            <p class="instructions">
+                <strong>Bước tiếp theo:</strong><br>
+                Copy đoạn code dưới đây và paste vào terminal:
+            </p>
+            <div class="code-box" id="auth-code"></div>
+            <button onclick="copyCode()">📋 Copy Code</button>
+        </div>
+        
+        <div class="instructions">
+            <p>Sau khi copy code, quay lại terminal và paste vào để hoàn tất authorization.</p>
+        </div>
+    </div>
 
+    <script>
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+        
+        if (error) {
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error').innerHTML = `❌ Error: ${error}`;
+        } else if (code) {
+            document.getElementById('success').style.display = 'block';
+            document.getElementById('code-container').style.display = 'block';
+            document.getElementById('auth-code').textContent = code;
+        } else {
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error').innerHTML = '❌ Không tìm thấy authorization code trong URL!';
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('auth-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Đã copy code vào clipboard!');
+            }).catch(err => {
+                alert('❌ Lỗi khi copy: ' + err);
+            });
+        }
+    </script>
+</body>
+</html>
